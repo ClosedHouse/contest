@@ -1,0 +1,3 @@
+Patch tested on: 3.17.8-200.fc20.x86_64
+
+Works fine ;). This can work on other kernel versions.
