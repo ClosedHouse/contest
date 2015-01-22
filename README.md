@@ -1,2 +1,2 @@
 # contest
-Preparation for 2015 constes
+Preparation for 2015 contest
