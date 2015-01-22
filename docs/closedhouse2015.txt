@@ -1,0 +1,46 @@
+NAZEV: White Hat for fun and profit (kdykoli prejmenovat)
+	Cast out the hacker
+	close the backdoor
+	Kick hacker through back door
+
+Pribeh: vyzkumnik/administrator zkouma napadene servery zakaznika
+
+Priprava
+pracovni masiny na nich bezi zavirovane virtualky
+	- startup skript (obnova z snapshotu)
+	- reboot - hackerske reseni s odmenou (prvni co to udela ok)
+		- ano ci ne startovat po rebootu? 
+	- co kdyz zkurvej celou masinu? - obnovi se snapshot virtualky
+
+Rozpoznatelne kody pro postup.
+
+Hinty ve webui na kliknuti - urovne:
+	hloupej
+	blbej
+	co tu vlastne delam?
+
+1 level bash_kod:
+	1) hledani backdooru (suid binarky, prohlednout bezici procesy, 
+		binarka bude mit jmeno kodu - posun dal ve webui
+
+	hint: podivat se po suid binarkach
+
+2) level: najit kdo porad meni binarku (systemtap co hleda chmod syscall)
+
+3) level:
+	proces se bude jmenovat jinak nez binarka
+
+	najdu process - zabiju ho - prvni cast: reakce na kill signal (fork, setsid)
+			- nahazovat suid bit na binarce s backdoorem 
+				- projit binarku a najit heslo
+			(co se stane, kdyz se smaze binarka? - obnovit komplet binarku)
+3.5) level:
+	- druha cast kill -9: skryty proces (systemtap skriptem, kpatch) nahodi prvni cast
+
+Ukoly:
+	priorita 1: naprogramovat celou hru (vsichni)
+	priorita 2: je potreba udelat webui (hloupe s jquery) (rhack)
+	je potreba sehnat a nainstalovat a nastavit hw (martin)
+	je potreba sehnat ceny (rhack)
+	naplanovat stridani strazi (jidlo/zachod)
+	udelat reklamu (rict o tom pruvodcum jinak nikdo neprijde) - vyvesky teamu
