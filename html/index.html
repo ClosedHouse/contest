@@ -1,0 +1,126 @@
+<html>
+<head>
+<title>OpenHouse 2015</title>
+<script src="./jquery-2.1.3.min.js"></script>
+<script src="./jquery.terminal-0.8.8.min.js"></script>
+<link href="./jquery.terminal.css" rel="stylesheet"/>
+<link href="./index.css" rel="stylesheet"/>
+<script>
+(function($) {
+    $.fn.tilda = function(eval, options) {
+        if ($('body').data('tilda')) {
+            return $('body').data('tilda').terminal;
+        }
+        this.addClass('tilda');
+        options = options || {};
+        eval = eval || function(command, term) {
+            term.echo("you don't set eval for tilda");
+        };
+        var settings = {
+            prompt: 'command> ',
+            name: 'tilda',
+            height: 100,
+            enabled: false,
+            greetings: 'use \"help\" command for ... help',
+            keypress: function(e) {
+                if (e.which == 96) {
+                    return false;
+                }
+            }
+        };
+        if (options) {
+            $.extend(settings, options);
+        }
+        this.append('<div class="td"></div>');
+        var self = this;
+        self.terminal = this.find('.td').terminal(eval, settings);
+        var focus = false;
+        $(document.documentElement).keypress(function(e) {
+            if (e.which == 96) {
+                self.slideToggle('fast');
+                self.terminal.focus(focus = !focus);
+                self.terminal.attr({
+                    scrollTop: self.terminal.attr("scrollHeight")
+                });
+            }
+        });
+        $('body').data('tilda', this);
+        this.hide();
+        return self;
+    };
+})(jQuery);
+//--------------------------------------------------------------------------
+var help_used = 0;
+var shell_locked = 1;
+
+jQuery(document).ready(function($) {
+    $('#tilda').tilda(function(command, terminal) {
+	    if (shell_locked == 1) {
+		terminal.echo('Shell is now locked.');
+		return;
+	    }
+	    	
+	    if (command == "help") {
+	    	if (help_used) {
+			terminal.echo('No help avaiable now');
+			return;
+		}
+		//help_used = 1;
+		terminal.echo('Hide this terminal to see whole manual page.');
+		$('body').css('background-color', 'black');
+		$("#scene2-bg").hide();
+		$("#scene2").hide();
+		$("#scene2-1").hide();
+		$("#scene2-2").hide();
+		$("#scene3").show();
+		return;
+	    }
+
+	terminal.echo('Unknown command my master');
+    });
+
+$('#scene2').hide();
+$('#scene2-1').hide();
+$('#scene2-2').hide();
+$('#scene3').hide();
+$('#scene2-bg').hide();
+
+function switch_scene(src_scene, dst_scene, delay) {
+	$(src_scene).delay(delay).fadeOut(2000, function() {
+		$(dst_scene).fadeIn(2000, function() {});
+	});
+}
+
+$( '#enter' ).click(function() {
+	$('#scene1').fadeOut(2000, function() {});
+	$('#scene2-bg').delay(2000).fadeIn(2000, function() { 
+		$('#scene2').fadeIn(2000, function() { switch_scene('#scene2', '#scene2-1', 0) });
+		switch_scene("#scene2-1", "#scene2-2", 0);
+		shell_locked = 0;
+	});
+})
+
+})
+
+</script>
+</head>
+<body>
+<div id="tilda"></div>
+
+<div id="scene1"><div id="enter">ENTER the GAME</div></div>
+<div id="scene2"></div>
+<div id="scene2-1">Welcome</br></br></br></div>
+<div id="scene2-2">The GAME</div>
+<div id="scene2-bg"></div>
+<div id="scene3"><div>
+		<p>Your VPS server were hacked by well know hacker organisation. They call themselves pumkin squad and they fight for freedom of their pumpkins. Pumkins and hacking are essential for theirs lives</p>
+		<p>
+		First of all you need connect to hacked server. Open real (not that dummy copy in browser) and use:
+		<pre>
+$ ssh root@hacked
+		</pre>
+		</p>
+
+</div></div>
+</body>
+
