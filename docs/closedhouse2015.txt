@@ -1,7 +1,9 @@
-NAZEV: White Hat for fun and profit (kdykoli prejmenovat)
+NAZEV: Titul: White Hat for fun and profit
+       Podtitul: Kick the hacker through the back door
+       
+(Puvodni dalsi napady:
 	Cast out the hacker
-	close the backdoor
-	Kick hacker through back door
+	close the backdoor)
 
 Pribeh: vyzkumnik/administrator zkouma napadene servery zakaznika
 
@@ -19,7 +21,11 @@ Hinty ve webui na kliknuti - urovne:
 	blbej
 	co tu vlastne delam?
 
-1 level bash_kod:
+0) level
+	kod v /etc/motd, motivacni odmena za prihlaseni pres ssh
+	vyzkouseni si textoveho interface pro zadani kodu
+
+1) level bash_kod:
 	1) hledani backdooru (suid binarky, prohlednout bezici procesy, 
 		binarka bude mit jmeno kodu - posun dal ve webui
 
@@ -41,6 +47,22 @@ Ukoly:
 	priorita 1: naprogramovat celou hru (vsichni)
 	priorita 2: je potreba udelat webui (hloupe s jquery) (rhack)
 	je potreba sehnat a nainstalovat a nastavit hw (martin)
+		momentalne je instaluje Robinuv intern
+		SSH klic virtualek dat na masiny
 	je potreba sehnat ceny (rhack)
 	naplanovat stridani strazi (jidlo/zachod)
 	udelat reklamu (rict o tom pruvodcum jinak nikdo neprijde) - vyvesky teamu
+
+Ukoly a dalsi poznamky z 2015-01-27:
+    closedhouse na githubu
+    do contest/
+        doplnit zapsani PID do sdielene pameti
+        kontrola druhym demonem kill(0,pid) a z navratoveho kodu se urci, zda druhy proces jeste zije
+        help
+    doplnit do webovky dokumentaci
+        hint
+        hint (dalsi spusteni bude vypisovat ten hint taky, alespon obsahove, obohaceny o dalsi)
+    zkusit nakonec v Konqueroru, Chrome tam neco blika nebo se zacykli pri zmene
+    v MOTD bude kod pro prvni level
+    presun do dalsiho: jmp code-<0000000>
+    pokud se da refresh browseru, vse se ztrati, ulozeni do cookie zavrzeno, jiz ziskane kody rekneme znovu
