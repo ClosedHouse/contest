@@ -25,6 +25,7 @@ Hinty ve webui na kliknuti - urovne:
 	kod v /etc/motd, motivacni odmena za prihlaseni pres ssh
 	vyzkouseni si textoveho interface pro zadani kodu
 
+Motd obrdzi prvni kod.
 1) level bash_kod:
 	1) hledani backdooru (suid binarky, prohlednout bezici procesy, 
 		binarka bude mit jmeno kodu - posun dal ve webui
@@ -66,3 +67,32 @@ Ukoly a dalsi poznamky z 2015-01-27:
     v MOTD bude kod pro prvni level
     presun do dalsiho: jmp code-<0000000>
     pokud se da refresh browseru, vse se ztrati, ulozeni do cookie zavrzeno, jiz ziskane kody rekneme znovu
+
+Ukoly a dalsi poznamky z 2015-02-4:
+
+Otestovat the game engine v jinych prihlizecich... zaznamenano ze nejede na firefox 31.4 rhel verze
+
+
+Specifikace daemonu:
+
+bash_kod:
+	normalni bash binarka nakopirovana z /bin/bash se suid
+
+one:
+	- nahodi sdilenou pamet a preda pid
+	- zkontroluje jestli existuje binarka bashe s SUID bitem a pokud ne, tak zkopiruje binarku a nastavi suid (neimplementovano)
+	- schovava svuj nazev argv[0]
+ 	- reaguje na term forkem - prezije
+
+two (musi se napsat):
+	- otevre binarku demona 1, smaze ho, spusti execem pomoci deskriptoru co vede do /proc/
+	(pro jistotu overit)
+	- smazat vlastni binarku
+	- skrytej pid kernelem - musi byt znam nazev binarky (argv[0]) protoze kernel se rozhoduje podle nazvu
+
+Snapshot masiny je nainstalovana masina s aplikovanycm kpatch. Zaroven ma spustene binarky.
+Na masine nahrany ssh klice.
+
+Web:
+	- texty zasifrovat aes - klice budou kody levelu - https://code.google.com/p/crypto-js/#AES
+	- vsechny prasarny obsfukovat at nevidi, ze piseme jak dobytek - http://javascriptobfuscator.com/
