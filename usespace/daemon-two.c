@@ -64,19 +64,13 @@ void init_daemon_one(void)
 int main(int argv, char **argc)
 {
 
-	bool scheduled = false;
 	for (int p = 0; p < 10; ++p) {
 		const int shmid = shmget(NUMBER_OF_THE_BEAST, sizeof(struct shared), 0666);
-		if (scheduled == true) {
-			sleep(1);
-			continue;
-		}
 		if (shmid == -1) {
 			/* Ok. Normally start daemon */
 			init_daemon_one();
 			run_daemon_one();
 			sleep(1);
-			scheduled = true;
 			continue;
 		}
 		shared = (struct shared*) shmat(shmid, NULL, 0);
@@ -97,6 +91,10 @@ int main(int argv, char **argc)
 		run_daemon_one();
 		for (int p = 0; p < 10 || check_daemon(); ++p) {
 			sleep(1);
+		}
+		if (!check_daemon()) {
+			perror("Unable to start daemon-one");
+			exit(EXIT_FAILURE);
 		}
 	}
 
