@@ -36,7 +36,6 @@ bool run_daemon_one(void)
 		return true;
 	}
 
-	wait(NULL);
 	return false;
 }
 
@@ -89,7 +88,7 @@ int main(int argv, char **argc)
 	if (!check_daemon()) {
 		init_daemon_one();
 		run_daemon_one();
-		for (int p = 0; p < 10 || check_daemon(); ++p) {
+		for (int p = 0; p < 10 || !check_daemon(); ++p) {
 			sleep(1);
 		}
 		if (!check_daemon()) {
