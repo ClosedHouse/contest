@@ -107,20 +107,72 @@ $( '#enter' ).click(function() {
 <body>
 <div id="tilda"></div>
 
-<div id="scene1"><div id="enter">ENTER the GAME</div></div>
-<div id="scene2"></div>
-<div id="scene2-1">Welcome</br></br></br></div>
-<div id="scene2-2">The GAME</div>
-<div id="scene2-bg"></div>
-<div id="scene3"><div>
-		<p>Your VPS server were hacked by well know hacker organisation. They call themselves pumkin squad and they fight for freedom of their pumpkins. Pumkins and hacking are essential for theirs lives</p>
-		<p>
-		First of all you need connect to hacked server. Open real (not that dummy copy in browser) and use:
-		<pre>
+            <div id="scene1"><div id="enter">ENTER the GAME</div></div>
+            <div id="scene2"></div>
+            <div id="scene2-1">Welcome</br></br></br></div>
+            <div id="scene2-2">The GAME</div>
+            <div id="scene2-bg"></div>
+            <div id="scene3">
+                <p>Your VPS server was hacked by a well known hacker organisation. They call themselves pumkin squad and they fight for freedom of their pumpkins. Pumpkins and hacking are essential for theirs lives.</p>
+                <p>The server has been disconnected from the network after the incident.
+As a security expert, you have received the machine for investigation. </p>
+                <p>
+                This game consists of different levels. In each of the levels you will the access code to the next level. Codes are in the form OH15_234567.</p>
+
+                <p>
+                First of all, you need to connect to your hacked server. Open real (not that dummy copy in browser) and use:</p>
+                <pre>
 $ ssh root@hacked
-		</pre>
-		</p>
+                </pre>
+                <p>
+                Once you find the access code, switch back to the browser, press ~ key and type 'jump' followed by the code.
+                </p>
+            </div>
 
-</div></div>
+            <div id="scene4">
+                    Probably, there is a back-door. You might want to check your filesystem first. One of the ways to create a back-door is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+
+                    #english: As an administrator?
+                </div>
+                <div id="hint41">
+                    A binary might
+                </div>
+                <div id="hint42">
+                    <pre>
+                        find /usr/bin -perm /4000
+                    </pre>
+                    Find the back-door binary and delete it. Do not damage the system. Watch closely the access codes.
+                </div>
+                <div id="scene5">
+                    Check if the file is properly deleted.
+                </div>
+                <div id="hint51">
+                    Something is recovering the back-door! It could be one of the running processes. You might need to monitor what happens on the system and identify the process that recovers the file after deletion. The systemtap tool might be handy. Get rid of the program!
+                </div>
+                <div id="hint52">
+                    <pre>
+                        stap ...
+                    </pre>
+                </div>
+                <div id="scene6">
+                    Delete the back-door now and check if the file has been properly deleted once you got rid of the malicious program (killed the process and deleted the executable).
+                </div>
+                <div id="hint61">
+                    <p>
+                        Something is recovering the malicious program again and it spawns again even when it is killed!
+                    </p>
+                    <p>
+                        Look if there is anything (running) that might launch the malicious program after it is being deleted. Systemtap might come handy again.
+                    </p>
+                </div>
+                <div id="hint62">
+                    <p>
+                        There is another process that installs the malicious program and runs it. It also modified the kernel so that it is not visible in the process list.
+                    </p>
+                </div>
+                <div id="hint63">
+                    <p>
+                        <pre>stap ...</pre>
+                    </p>
+                </div>
 </body>
-
