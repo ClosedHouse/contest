@@ -22,6 +22,7 @@ static int fd;
 
 bool run_daemon_one(void)
 {
+	int status;
 	pid_t pid = fork();
 
 	if (pid == 0) {
@@ -36,6 +37,7 @@ bool run_daemon_one(void)
 		return true;
 	}
 
+	waitpid(pid, &status, 0);
 	return false;
 }
 
