@@ -6,17 +6,19 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/shm.h>
-#include "shared.h"
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <fcntl.h>
 
+#include "shared.h"
 
 static struct shared *shared;
 
 void spawn_again(int signum)
 {
+	int status;
 	(void) signum; /* unused */
 
 	pid_t pid = fork();
@@ -28,6 +30,8 @@ void spawn_again(int signum)
 		setsid();
 		return;
 	}
+
+	waitpid(pid, &status, 0);
 	exit(EXIT_SUCCESS);
 }
 
