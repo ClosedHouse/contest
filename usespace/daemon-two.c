@@ -15,7 +15,6 @@
 
 #include "shared.h"
 
-static bool deleted;
 static struct shared *shared;
 static char *daemon_one_path;
 static int fd;
