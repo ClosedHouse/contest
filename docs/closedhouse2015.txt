@@ -45,14 +45,15 @@ Motd obrdzi prvni kod.
 	- druha cast kill -9: skryty proces (systemtap skriptem, kpatch) nahodi prvni cast
 
 Ukoly:
-	priorita 1: naprogramovat celou hru (vsichni)
+	priorita 1: naprogramovat celou hru (vsichni) - done
 	priorita 2: je potreba udelat webui (hloupe s jquery) (rhack)
-	je potreba sehnat a nainstalovat a nastavit hw (martin)
-		momentalne je instaluje Robinuv intern
-		SSH klic virtualek dat na masiny
-	je potreba sehnat ceny (rhack)
+	je potreba sehnat a nainstalovat a nastavit hw (martin) - done
+		momentalne je instaluje Robinuv intern - done
+		SSH klic virtualek dat na masiny - 
+	je potreba sehnat ceny (rhack) - done - dela za nas HR
 	naplanovat stridani strazi (jidlo/zachod)
-	udelat reklamu (rict o tom pruvodcum jinak nikdo neprijde) - vyvesky teamu
+	udelat reklamu (rict o tom pruvodcum jinak nikdo neprijde) - done HR
+        vyvesky teamu
 
 Ukoly a dalsi poznamky z 2015-01-27:
     closedhouse na githubu
@@ -89,6 +90,7 @@ two (musi se napsat):
 	(pro jistotu overit)
 	- smazat vlastni binarku
 	- skrytej pid kernelem - musi byt znam nazev binarky (argv[0]) protoze kernel se rozhoduje podle nazvu
+        - systemtap tap cast hlidani podezrelych exec volani
 
 Snapshot masiny je nainstalovana masina s aplikovanycm kpatch. Zaroven ma spustene binarky.
 Na masine nahrany ssh klice.
