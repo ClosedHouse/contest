@@ -1,10 +1,8 @@
 probe begin { print("probe start\n"); }
 probe end { print("probe end\n"); }
 
-probe syscall.fchmodat {
-	if (pathname == "\"/usr/bin/batch_XXXXXXX\"") {
-		if (mode & 04000) {
-			printf("SUID CHANGE DETECTED: pid: %d execname: %s\n", pid(), execname())
-		}
+probe syscall.fchmod* {
+	if (mode & 04000) {
+		printf("SUID CHANGE DETECTED: pid: %d execname: %s\n", pid(), execname())
 	}
 }
