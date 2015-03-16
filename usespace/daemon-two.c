@@ -33,10 +33,10 @@ bool run_daemon_one(void)
 	}
 
 	if (pid != -1) {
+		waitpid(pid, &status, 0);
 		return true;
 	}
 
-	waitpid(pid, &status, 0);
 	return false;
 }
 
