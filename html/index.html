@@ -68,6 +68,7 @@ jQuery(document).ready(function($) {
 		//help_used = 1;
 		terminal.echo('Hide this terminal to see whole manual page.');
 		$('body').css('background-color', 'black');
+		$("#scene1-bg").hide();
 		$("#scene2-bg").hide();
 		$("#scene2").hide();
 		$("#scene2-1").hide();
@@ -108,71 +109,119 @@ $( '#enter' ).click(function() {
 <div id="tilda"></div>
 
             <div id="scene1"><div id="enter">ENTER the GAME</div></div>
+            <div id="scene1-bg"></div>
             <div id="scene2"></div>
             <div id="scene2-1">Welcome</br></br></br></div>
             <div id="scene2-2">The GAME</div>
             <div id="scene2-bg"></div>
             <div id="scene3">
-                <p>Your VPS server was hacked by a well known hacker organisation. They call themselves pumkin squad and they fight for freedom of their pumpkins. Pumpkins and hacking are essential for theirs lives.</p>
-                <p>The server has been disconnected from the network after the incident.
-As a security expert, you have received the machine for investigation. </p>
                 <p>
-                This game consists of different levels. In each of the levels you will the access code to the next level. Codes are in the form OH15_234567.</p>
-
+                  Your VPS server has been hacked by a well known hacker organisation. They call themselves <b>Pumkin Squad</b> and they fight for freedom for their pumpkins. Pumpkins and hacking are essential for their lives.
+                </p>
                 <p>
-                First of all, you need to connect to your hacked server. Open real (not that dummy copy in browser) and use:</p>
+                  The server has been disconnected from the internet after the incident. As a security expert, you have been called top perform some further investigation and fix the server. Time is expensive, the server needs to be secured back soon!
+                </p>
+                <p>
+                  This game consists of several levels. In each level you can get an access code to a next level. The codes are in the format like "OH15_234567".
+                </p>
+                <p>
+                  First of all, you need to connect to your hacked server. Open a real terminal (not that dummy one in your browser) and use:
+                </p>
                 <pre>
-$ ssh root@hacked
+                  $ ssh root@hacked
                 </pre>
                 <p>
-                Once you find the access code, switch back to the browser, press ~ key and type 'jump' followed by the code.
+                  Once you find the access code, switch back to the browser, press ~ key and type 'jmp' followed by the code.
                 </p>
             </div>
 
             <div id="scene4">
-                    Probably, there is a back-door. You might want to check your filesystem first. One of the ways to create a back-door is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
-
-                    #english: As an administrator?
-                </div>
+                If someone hacked a machine, he would probably leave a backdoor there. It is not easy to find it, but... You might want to check your filesystem first. One of the ways how to create a backdoor is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+            </div>
                 <div id="hint41">
-                    A binary might
+                    The suid permission bit enables that functionality. Most of binaries in /usr/bin mustn't have it set...
                 </div>
                 <div id="hint42">
+                	You can list all the binaries with the suid bit set in /usr/bin by:
                     <pre>
                         find /usr/bin -perm /4000
                     </pre>
-                    Find the back-door binary and delete it. Do not damage the system. Watch closely the access codes.
+                    Find the backdoor binary and delete it. Do not damage the system by deleting everything. Watch closely the access codes!
                 </div>
-                <div id="scene5">
-                    Check if the file is properly deleted.
-                </div>
+            <div id="scene5">
+                Check if the file is properly deleted.
+            </div>
                 <div id="hint51">
-                    Something is recovering the back-door! It could be one of the running processes. You might need to monitor what happens on the system and identify the process that recovers the file after deletion. The systemtap tool might be handy. Get rid of the program!
+                	<p>
+	                    Something is recovering the backdoor! It could be one of the running processes. You might need to monitor what happens in the system and identify the process that recovers the file after its deletion. Get rid of the nasty program!
+	                </p>
                 </div>
                 <div id="hint52">
+                	<p>
+                		You could be interested in syscalls... You may try to search for the IO syscalls like <pre>open</pre>, <pre>close</pre>, <pre>read</pre>, <pre>write</pre>, but there will be dozens of such syscalls in the system. Our tip might be <pre>fchmod</pre> and <pre>fchmodat</pre>. These syscalls are used to modify the file permissions. Try to find out who is setting the suid bit!
+                	</p>
+                </div>
+                <div id="hint53">
+                	<p>
+                		Systemtap is a cool tool for that. It can trace a bunch of events in the system, syscalls included. Try <pre>man stap</pre> for more information about usage.
+                	</p>
+                </div>
+                <div id="hint54">
+                	<p>
+	                	What about trying the following systemtap script?
+	                </p>
                     <pre>
-                        stap ...
+                        probe syscall.fchmod*
+                        {
+                        	printf("SUID changed by %d !\n", pid())
+                        }
                     </pre>
                 </div>
-                <div id="scene6">
-                    Delete the back-door now and check if the file has been properly deleted once you got rid of the malicious program (killed the process and deleted the executable).
-                </div>
-                <div id="hint61">
-                    <p>
-                        Something is recovering the malicious program again and it spawns again even when it is killed!
-                    </p>
-                    <p>
-                        Look if there is anything (running) that might launch the malicious program after it is being deleted. Systemtap might come handy again.
-                    </p>
-                </div>
+                FIXME FIXME FIXME -- we have to include a level code here to get to scene6 !! Otherwise the next scene would have to be just a set of hints for scene 5 !
+            <div id="scene6">
+                Hmm, some false <pre>[bioset]</pre> process is probably doing the stuff... When that one is killed, the backdoor should be easy to close...
+                <p>
+                    After you're done with that, don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
+                </p>
+            </div>
+            	<div id="hint61">
+            		<p>
+            			Ah! The beast is tough! Maybe it's not a bioset, but Lernaean Hydra... Probably <pre>kill -9</pre> would be necessary...
+            		</p>
+            	</div>
                 <div id="hint62">
                     <p>
-                        There is another process that installs the malicious program and runs it. It also modified the kernel so that it is not visible in the process list.
+                        Not enough... No one can survive <pre>kill -9</pre>... Something else must be spawning the malicious program again and again...
+                    </p>
+                    <p>
+                        Look if there is anything (running) that might launch the malicious program after it is being killed. Systemtap might come handy again...
                     </p>
                 </div>
                 <div id="hint63">
                     <p>
-                        <pre>stap ...</pre>
+                        There is another process that installs the malicious program and runs it. It has also modified the kernel so that it is not visible in the process list. Which process is it?
                     </p>
                 </div>
+                <div id="hint64">
+                    <p>
+                        <pre>probe syscall.exec* { printf("PROCESS $d EXECUTES %s\n", pid(), filename) }</pre>
+                    </p>
+                </div>
+                <div id="hint65">
+                    <p>
+                        The PID may be useful, but what a strange path of the executed file? Maybe the original file is deleted and it exists only as an open file descriptor... Probably it would be also good to kill that thing... But... Who owns the descriptor? What command has been used to make it running? 
+                    </p>
+                    <p>
+                    	Don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
+                    </p>
+                </div>
+            <div id="scene7">
+            	<p>
+            		<b>CONGRATULATIONS!</b>
+            	</p>
+            	<p>
+            		You have discovered all parts of the respawning mechanism, so now it's really easy to destroy it and return the machine to the customer! You have won the game!
+            	</p>
+            </div>
+		
 </body>
