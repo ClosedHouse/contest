@@ -52,6 +52,25 @@
 //--------------------------------------------------------------------------
 var help_used = 0;
 var shell_locked = 1;
+var actual_scene = -1;
+var hints_used = -1;
+var hints_max = -1;
+
+function hide_all_scenes() {
+	$('div[id^="scene"]').each(
+		function(index) {
+			$(this).hide();
+		}
+	);
+}
+
+function hide_all_hints_by_scene_name(scene_name) {
+	$(scene_name).find('div[id^="hint"]').each(
+		function(index) {
+			$(this).hide();
+		}
+	);
+}
 
 jQuery(document).ready(function($) {
     $('#tilda').tilda(function(command, terminal) {
@@ -59,32 +78,44 @@ jQuery(document).ready(function($) {
 		terminal.echo('Shell is now locked.');
 		return;
 	    }
+
+
 	    	
 	    if (command == "help") {
 	    	if (help_used) {
 			terminal.echo('No help avaiable now');
 			return;
 		}
-		//help_used = 1;
+		help_used = 1;
 		terminal.echo('Hide this terminal to see whole manual page.');
-		$('body').css('background-color', 'black');
-		$("#scene1-bg").hide();
-		$("#scene2-bg").hide();
-		$("#scene2").hide();
-		$("#scene2-1").hide();
-		$("#scene2-2").hide();
+		hide_all_scenes();
 		$("#scene3").show();
 		return;
+	    }
+
+	    var cmd = command.split(" ");
+
+	    if (cmd[0] == "jmp") {
+		    switch (cmd[1]) {
+			// Code from /etc/motd on hacked machine
+			case "OH15_FAEBFD":
+				hide_all_scenes();
+				hints_max = 2;
+				hints_used = 0;
+				hide_all_hints_by_scene_name("#scene4");
+				$("#scene4").show();
+				break;
+		    }
 	    }
 
 	terminal.echo('Unknown command my master');
     });
 
-$('#scene2').hide();
-$('#scene2-1').hide();
-$('#scene2-2').hide();
-$('#scene3').hide();
-$('#scene2-bg').hide();
+
+hide_all_scenes();
+$("#scene1-bg").show();
+$("#scene1").show();
+
 
 function switch_scene(src_scene, dst_scene, delay) {
 	$(src_scene).delay(delay).fadeOut(2000, function() {
@@ -92,7 +123,7 @@ function switch_scene(src_scene, dst_scene, delay) {
 	});
 }
 
-$( '#enter' ).click(function() {
+$( '#scene1' ).click(function() {
 	$('#scene1').fadeOut(2000, function() {});
 	$('#scene2-bg').delay(2000).fadeIn(2000, function() { 
 		$('#scene2').fadeIn(2000, function() { switch_scene('#scene2', '#scene2-1', 0) });
@@ -107,13 +138,15 @@ $( '#enter' ).click(function() {
 </head>
 <body>
 <div id="tilda"></div>
-
-            <div id="scene1"><div id="enter">ENTER the GAME</div></div>
-            <div id="scene1-bg"></div>
+	<!-- intro -->
+            <div id="scene1-bg">
+		    <div id="scene1">ENTER the GAME</div>
+	    </div>
             <div id="scene2"></div>
             <div id="scene2-1">Welcome</br></br></br></div>
             <div id="scene2-2">The GAME</div>
             <div id="scene2-bg"></div>
+
             <div id="scene3">
                 <p>
                   Your VPS server has been hacked by a well known hacker organisation. They call themselves <b>Pumkin Squad</b> and they fight for freedom for their pumpkins. Pumpkins and hacking are essential for their lives.
@@ -136,21 +169,24 @@ $( '#enter' ).click(function() {
             </div>
 
             <div id="scene4">
-                If someone hacked a machine, he would probably leave a backdoor there. It is not easy to find it, but... You might want to check your filesystem first. One of the ways how to create a backdoor is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+		<p>
+			Great! You have logged in. Now you may start your journey...
+		</p>
+
+			If someone hacked a machine, he would probably leave a backdoor there. It is not easy to find it, but... You might want to check your filesystem first. One of the ways how to create a backdoor is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+			<div id="hint41">
+			    The suid permission bit enables that functionality. Most of binaries in /usr/bin mustn't have it set...
+			</div>
+			<div id="hint42">
+				You can list all the binaries with the suid bit set in /usr/bin by:
+			    <pre>
+				find /usr/bin -perm /4000
+			    </pre>
+				Find the backdoor binary and delete it. Do not damage the system by deleting everything. Watch closely the access codes!
+			</div>
             </div>
-                <div id="hint41">
-                    The suid permission bit enables that functionality. Most of binaries in /usr/bin mustn't have it set...
-                </div>
-                <div id="hint42">
-                	You can list all the binaries with the suid bit set in /usr/bin by:
-                    <pre>
-                        find /usr/bin -perm /4000
-                    </pre>
-                    Find the backdoor binary and delete it. Do not damage the system by deleting everything. Watch closely the access codes!
-                </div>
             <div id="scene5">
                 Check if the file is properly deleted.
-            </div>
                 <div id="hint51">
                 	<p>
 	                    Something is recovering the backdoor! It could be one of the running processes. You might need to monitor what happens in the system and identify the process that recovers the file after its deletion. Get rid of the nasty program!
@@ -178,12 +214,12 @@ $( '#enter' ).click(function() {
                     </pre>
                 </div>
                 FIXME FIXME FIXME -- we have to include a level code here to get to scene6 !! Otherwise the next scene would have to be just a set of hints for scene 5 !
+            </div>
             <div id="scene6">
                 Hmm, some false <pre>[bioset]</pre> process is probably doing the stuff... When that one is killed, the backdoor should be easy to close...
                 <p>
                     After you're done with that, don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
                 </p>
-            </div>
             	<div id="hint61">
             		<p>
             			Ah! The beast is tough! Maybe it's not a bioset, but Lernaean Hydra... Probably <pre>kill -9</pre> would be necessary...
@@ -215,6 +251,7 @@ $( '#enter' ).click(function() {
                     	Don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
                     </p>
                 </div>
+            </div>
             <div id="scene7">
             	<p>
             		<b>CONGRATULATIONS!</b>

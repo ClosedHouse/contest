@@ -1,11 +1,14 @@
 body {
-	background-color: white;
+	background-color: black;
 	font-family: "Droid Sans Mono", "Courier New", monospace;
-	font-size: 9em;
+	font-size: 20pt;
+	color: white;
 }
+	
 
 #scene1, #scene2, #scene2-1, #scene2-2 {
-	background-color: white;
+	/* background-color: white; */
+	color: black;
 
 	position: fixed; /* or absolute */
 	top: 50%;
@@ -17,6 +20,13 @@ body {
 
 	text-align: center;
 	z-index: 9999;
+	font-size: 100pt;
+}
+
+#scene1-bg {
+	background-color: white;
+	height: 100%;
+	width: 100%;
 }
 
 #scene2, #scene2-1, #scene3 {
