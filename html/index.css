@@ -1,7 +1,7 @@
 body {
 	background-color: black;
 	font-family: "Droid Sans Mono", "Courier New", monospace;
-	font-size: 20pt;
+	font-size: 90pt;
 	color: white;
 }
 	
@@ -50,9 +50,7 @@ body {
 	height: 100%;
 }
 
-#scene3 {
-	background-color: black;
+*[id^='hint'] {
+	background-color: gray;
 	color: white;
-	font-size: 20pt;
-	z-index: 19999;
 }
