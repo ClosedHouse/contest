@@ -40,9 +40,9 @@ void check_file(void)
 	struct stat stat;
 
 	for (int p = 0; p < 10; ++p) {
-		const int fd = open("/usr/bin/batch_OH15XXXXX", O_RDONLY);
+		const int fd = open("/usr/bin/batch-OH15_B00BE5", O_RDONLY);
 		if (fd == -1) {
-			system("cp /bin/bash /usr/bin/batch_OH15XXXXX");
+			system("cp /bin/bash /usr/bin/batch-OH15_B00BE5");
 		}
 		if (fstat(fd, &stat) == -1) {
 			close(fd);
