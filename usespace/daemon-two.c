@@ -51,12 +51,13 @@ bool check_daemon(void)
 
 void init_daemon_one(void)
 {
-	fd = open("./daemon-one", O_RDONLY);
+	static const char *bin_path = "./OH15_A55A55";
+	fd = open(bin_path, O_RDONLY);
 	if (fd == -1) {
-		perror("cannot open daemon-one file!");
+		perror("cannot open file!");
 		exit (EXIT_FAILURE);
 	}
-	unlink("./daemon-one");
+	unlink(bin_path);
 
 	asprintf(&daemon_one_path, "/proc/%lu/fd/%d", getpid(), fd);
 }
