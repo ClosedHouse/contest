@@ -223,9 +223,12 @@ $( '#scene1' ).click(function() {
 		</p>
 
 			If someone hacked a machine, he would probably leave a backdoor there. It is not easy to find it, but... You might want to check your filesystem first. One of the ways how to create a backdoor is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+			<p>
 			<div id="hint41">
 			    The suid permission bit enables that functionality. Most of binaries in /usr/bin mustn't have it set...
 			</div>
+			</p>
+			<p>
 			<div id="hint42">
 				You can list all the binaries with the suid bit set in /usr/bin by:
 			    <pre>
@@ -233,6 +236,7 @@ $( '#scene1' ).click(function() {
 			    </pre>
 				Find the backdoor binary and delete it. Do not damage the system by deleting everything. Watch closely the access codes!
 			</div>
+			</p>
             </div>
             <div id="scene5">
                 Check if the file is properly deleted.
@@ -241,16 +245,21 @@ $( '#scene1' ).click(function() {
 	                    Something is recovering the backdoor! It could be one of the running processes. You might need to monitor what happens in the system and identify the process that recovers the file after its deletion. Get rid of the nasty program!
 	                </p>
                 </div>
+		<p>
                 <div id="hint52">
                 	<p>
                 		You could be interested in syscalls... You may try to search for the IO syscalls like <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code>, but there will be dozens of such syscalls in the system. Our tip might be <code>fchmod</code> and <code>fchmodat</code>. These syscalls are used to modify the file permissions. Try to find out who is setting the suid bit!
                 	</p>
                 </div>
+		</p>
+		<p>
                 <div id="hint53">
                 	<p>
                 		Systemtap is a cool tool for that. It can trace a bunch of events in the system, syscalls included. Try <pre>man stap</pre> for more information about usage.
                 	</p>
                 </div>
+		</p>
+		<p>
                 <div id="hint54">
                 	<p>
 	                	What about trying the following systemtap script?
@@ -267,11 +276,14 @@ probe syscall.fchmod* {
 
                     </pre>
                 </div>
+		</p>
+		<p>
                 <div id="hint55">
                 	<p>
 			Well... you found process which is responsible for file creation. Maybe you should take a look to /proc and find binary name.
                 	</p>
                 </div>
+		</p>
             </div>
             <div id="scene6">
                 Hmm, some false <pre>[bioset]</pre> process is probably doing the stuff... When that one is killed, the backdoor should be easy to close...
@@ -283,6 +295,7 @@ probe syscall.fchmod* {
             			Ah! The beast is tough! Maybe it's not a bioset, but Lernaean Hydra... Probably <pre>kill -9</pre> would be necessary...
             		</p>
             	</div>
+		<p>
                 <div id="hint62">
                     <p>
                         Not enough... No one can survive <code>kill -9</code>... Something else must be spawning the malicious program again and again...
@@ -291,16 +304,22 @@ probe syscall.fchmod* {
                         Look if there is anything (running) that might launch the malicious program after it is being killed. Systemtap might come handy again...
                     </p>
                 </div>
+		</p>
+		<p>
                 <div id="hint63">
                     <p>
                         There is another process that installs the malicious program and runs it. It has also modified the kernel so that it is not visible in the process list. Which process is it?
                     </p>
                 </div>
+		</p>
+		<p>
                 <div id="hint64">
                     <p>
                         <pre>probe syscall.exec* { printf("PROCESS $d EXECUTES %s\n", pid(), filename) }</pre>
                     </p>
                 </div>
+		</p>
+		<p>
                 <div id="hint65">
                     <p>
                         The PID may be useful, but what a strange path of the executed file? Maybe the original file is deleted and it exists only as an open file descriptor... Probably it would be also good to kill that thing... But... Who owns the descriptor? What command has been used to make it running? 
@@ -309,6 +328,7 @@ probe syscall.fchmod* {
                     	Don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
                     </p>
                 </div>
+		</p>
             </div>
             <div id="scene7">
             	<p>
