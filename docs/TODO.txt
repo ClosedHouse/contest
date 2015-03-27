@@ -1,0 +1,6 @@
+* Set virtual and real machines (rhack + volunteers)
+	* virtual - create 2 snapshots - one with devel stuff
+				       - prepared for gamer
+	* virtual - set codes to game (/etc/motd
+
+daemons: set codes to game
