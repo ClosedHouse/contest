@@ -1,0 +1,356 @@
+<html>
+<head>
+<title>OpenHouse 2015</title>
+<script src="./jquery-2.1.3.min.js"></script>
+<script src="./jquery.terminal-0.8.8.min.js"></script>
+<script src="./aes.js"></script>
+<link href="./jquery.terminal.css" rel="stylesheet"/>
+<link href="./index.css" rel="stylesheet"/>
+<script>
+(function($) {
+    $.fn.tilda = function(eval, options) {
+        if ($('body').data('tilda')) {
+            return $('body').data('tilda').terminal;
+        }
+        this.addClass('tilda');
+        options = options || {};
+        eval = eval || function(command, term) {
+            term.echo("you don't set eval for tilda");
+        };
+        var settings = {
+            prompt: 'command> ',
+            name: 'tilda',
+            height: 100,
+            enabled: false,
+            greetings: 'use \"help\" command for ... help',
+            keypress: function(e) {
+                if (e.which == 96) {
+                    return false;
+                }
+            }
+        };
+        if (options) {
+            $.extend(settings, options);
+        }
+        this.append('<div class="td"></div>');
+        var self = this;
+        self.terminal = this.find('.td').terminal(eval, settings);
+	self.terminal.purge();
+        var focus = false;
+        $(document.documentElement).keypress(function(e) {
+            if (e.which == 96) {
+                self.slideToggle('fast');
+                self.terminal.focus(focus = !focus);
+                self.terminal.attr({
+                    scrollTop: self.terminal.attr("scrollHeight")
+                });
+            }
+        });
+        $('body').data('tilda', this);
+        this.hide();
+        return self;
+    };
+})(jQuery);
+//--------------------------------------------------------------------------
+var help_used = 0;
+var shell_locked = 1;
+var actual_scene = "";
+var hints_max = 0;
+var actual_hint = 0;
+var hints_enabled = 0;
+
+function hide_all_scenes() {
+	$('div[id^="scene"]').each(
+		function(index) {
+			$(this).hide();
+		}
+	);
+}
+
+function hide_all_hints_by_scene_name(scene_name) {
+	$(scene_name).find('div[id^="hint"]').each(
+		function(index) {
+			$(this).hide();
+		}
+	);
+}
+
+jQuery(document).ready(function($) {
+    $('#tilda').tilda(function(command, terminal) {
+	    if (shell_locked == 1) {
+		terminal.echo('Shell is now locked.');
+		return;
+	    }
+
+	    if (command == "help") {
+	    	if (help_used) {
+			terminal.echo('No help avaiable now');
+			return;
+		}
+		help_used = 1;
+		terminal.echo('Hide this terminal to see whole manual page.');
+		hide_all_scenes();
+		$("#scene3").show();
+		return;
+	    }
+
+	    if (command == "hint") {
+		if (!hints_enabled) {
+			terminal.echo('Hint\'s are not enabled now');
+			return;
+		}
+
+		skip = 0;
+		$(actual_scene).find('div[id^="hint"]:hidden').each(
+			function(index) {
+				if (skip) { return; }
+				skip = 1
+				$(this).show();
+			}
+		);
+
+		if (skip == 0) {
+			terminal.echo('No more hints.');
+		}
+
+		return;
+	    }
+
+	    var cmd = command.split(" ");
+	    if (cmd[0] == "jmp") {
+		    switch (cmd[1]) {
+			// Code from /etc/motd on hacked machine
+			case "OH15_FAEBFD":
+				hide_all_scenes();
+				hints_enabled = 1;
+
+				actual_scene = "#scene4";
+				actual_hint = 0;
+				hide_all_hints_by_scene_name(actual_scene);
+				$(actual_scene).show();
+				return;
+				break;
+			// Code from /usr/bin/
+			case "OH15_B00BE5":
+				hide_all_scenes();
+				hints_enabled = 1;
+				actual_scene = "#scene5";
+				actual_hint = 0;
+				hide_all_hints_by_scene_name(actual_scene);
+				$(actual_scene).show();
+				return;
+				break;
+
+			// Code from /proc/<pid_of_daemon_one>/fd/
+			// Actually this is expected
+			// file descriptor leak
+			case "OH15_A55A55":
+				hide_all_scenes();
+				hints_enabled = 1;
+				actual_scene = "#scene6";
+				actual_hint = 0;
+				hide_all_hints_by_scene_name(actual_scene);
+				$(actual_scene).show();
+				return;
+				break;
+
+			// /proc/<pid_of_daemon_two>/comm
+			case "OH15_150164":
+				hide_all_scenes();
+				hints_enabled = 1;
+				actual_scene = "#scene7";
+				actual_hint = 0;
+				hide_all_hints_by_scene_name(actual_scene);
+				$(actual_scene).show();
+				return;
+				break;
+
+			default:
+				terminal.echo("Wrong code");
+				return;
+				break;
+		    }
+	    }
+
+	terminal.echo('Unknown command my master');
+    });
+
+
+hide_all_scenes();
+$("#scene1-bg").show();
+$("#scene1").show();
+
+function switch_scene(src_scene, dst_scene, delay) {
+	$(src_scene).delay(delay).fadeOut(2000, function() {
+		$(dst_scene).fadeIn(2000, function() {});
+	});
+}
+
+$( '#scene1' ).click(function() {
+	$('#scene1').fadeOut(2000, function() {});
+	$('#scene2-bg').delay(2000).fadeIn(2000, function() { 
+		$('#scene2').fadeIn(2000, function() { switch_scene('#scene2', '#scene2-1', 0) });
+		switch_scene("#scene2-1", "#scene2-2", 0);
+		shell_locked = 0;
+	});
+})
+
+})
+
+</script>
+</head>
+<body>
+<div id="tilda"></div>
+	<!-- intro -->
+            <div id="scene1-bg">
+		    <div id="scene1">ENTER the GAME</div>
+	    </div>
+            <div id="scene2"></div>
+            <div id="scene2-1">Welcome</br></br></br></div>
+            <div id="scene2-2">The GAME</div>
+            <div id="scene2-bg"></div>
+
+            <div id="scene3">
+                <p>
+                  Your VPS server has been hacked by a well known hacker organisation. They call themselves <b>Pumkin Squad</b> and they fight for freedom for their pumpkins. Pumpkins and hacking are essential for their lives.
+                </p>
+                <p>
+                  The server has been disconnected from the internet after the incident. As a security expert, you have been called top perform some further investigation and fix the server. Time is expensive, the server needs to be secured back soon!
+                </p>
+                <p>
+                  This game consists of several levels. In each level you can get an access code to a next level. The codes are in the format like "OH15_234567".
+                </p>
+                <p>
+                  First of all, you need to connect to your hacked server. Open a real terminal (not that dummy one in your browser) and use:
+                </p>
+                <pre>
+                  $ ssh root@hacked
+                </pre>
+                <p>
+                  Once you find the access code, switch back to the browser, press ~ key and type 'jmp' followed by the code.
+                </p>
+            </div>
+
+            <div id="scene4">
+		<p>
+			Great! You have logged in. Now you may start your journey...
+		</p>
+
+			If someone hacked a machine, he would probably leave a backdoor there. It is not easy to find it, but... You might want to check your filesystem first. One of the ways how to create a backdoor is leaving a special binary that is owned by root, but when it is executed by any user, it runs under the 'root' super-user.
+			<p>
+			<div id="hint41">
+			    The suid permission bit enables that functionality. Most of binaries in /usr/bin mustn't have it set...
+			</div>
+			</p>
+			<p>
+			<div id="hint42">
+				You can list all the binaries with the suid bit set in /usr/bin by:
+			    <pre>
+				find /usr/bin -perm /4000
+			    </pre>
+				Find the backdoor binary and delete it. Do not damage the system by deleting everything. Watch closely the access codes!
+			</div>
+			</p>
+            </div>
+            <div id="scene5">
+                Check if the file is properly deleted.
+                <div id="hint51">
+                	<p>
+	                    Something is recovering the backdoor! It could be one of the running processes. You might need to monitor what happens in the system and identify the process that recovers the file after its deletion. Get rid of the nasty program!
+	                </p>
+                </div>
+		<p>
+                <div id="hint52">
+                	<p>
+                		You could be interested in syscalls... You may try to search for the IO syscalls like <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code>, but there will be dozens of such syscalls in the system. Our tip might be <code>fchmod</code> and <code>fchmodat</code>. These syscalls are used to modify the file permissions. Try to find out who is setting the suid bit!
+                	</p>
+                </div>
+		</p>
+		<p>
+                <div id="hint53">
+                	<p>
+                		Systemtap is a cool tool for that. It can trace a bunch of events in the system, syscalls included. Try <pre>man stap</pre> for more information about usage.
+                	</p>
+                </div>
+		</p>
+		<p>
+                <div id="hint54">
+                	<p>
+	                	What about trying the following systemtap script?
+	                </p>
+                    <pre>
+probe begin { print("probe start\n"); }
+probe end { print("probe end\n"); }
+
+probe syscall.fchmod* {
+        if (mode & 04000) {
+                printf("SUID CHANGE DETECTED: pid: %d execname: %s\n", pid(), execname())
+        }
+}
+
+                    </pre>
+                </div>
+		</p>
+		<p>
+                <div id="hint55">
+                	<p>
+			Well... you found process which is responsible for file creation. Maybe you should take a look to /proc and find binary name.
+                	</p>
+                </div>
+		</p>
+            </div>
+            <div id="scene6">
+                Hmm, some false <pre>[bioset]</pre> process is probably doing the stuff... When that one is killed, the backdoor should be easy to close...
+                <p>
+                    After you're done with that, don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
+                </p>
+            	<div id="hint61">
+            		<p>
+            			Ah! The beast is tough! Maybe it's not a bioset, but Lernaean Hydra... Probably <pre>kill -9</pre> would be necessary...
+            		</p>
+            	</div>
+		<p>
+                <div id="hint62">
+                    <p>
+                        Not enough... No one can survive <code>kill -9</code>... Something else must be spawning the malicious program again and again...
+                    </p>
+                    <p>
+                        Look if there is anything (running) that might launch the malicious program after it is being killed. Systemtap might come handy again...
+                    </p>
+                </div>
+		</p>
+		<p>
+                <div id="hint63">
+                    <p>
+                        There is another process that installs the malicious program and runs it. It has also modified the kernel so that it is not visible in the process list. Which process is it?
+                    </p>
+                </div>
+		</p>
+		<p>
+                <div id="hint64">
+                    <p>
+                        <pre>probe syscall.exec* { printf("PROCESS $d EXECUTES %s\n", pid(), filename) }</pre>
+                    </p>
+                </div>
+		</p>
+		<p>
+                <div id="hint65">
+                    <p>
+                        The PID may be useful, but what a strange path of the executed file? Maybe the original file is deleted and it exists only as an open file descriptor... Probably it would be also good to kill that thing... But... Who owns the descriptor? What command has been used to make it running? 
+                    </p>
+                    <p>
+                    	Don't forget to check, whether the backdoor is really closed and no one is opening it anymore!
+                    </p>
+                </div>
+		</p>
+            </div>
+            <div id="scene7">
+            	<p>
+            		<b>CONGRATULATIONS!</b>
+            	</p>
+            	<p>
+            		You have discovered all parts of the respawning mechanism, so now it's really easy to destroy it and return the machine to the customer! You have won the game!
+            	</p>
+            </div>
+		
+</body>
