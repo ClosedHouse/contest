@@ -50,6 +50,10 @@ body {
 	height: 100%;
 }
 
+#scene3, #scene4, #scene5, #scene6, #scene7 {
+	font-size: 20pt;
+}
+
 *[id^='hint'] {
 	background-color: gray;
 	color: white;
