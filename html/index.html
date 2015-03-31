@@ -76,10 +76,10 @@ function hide_all_hints_by_scene_name(scene_name) {
 
 jQuery(document).ready(function($) {
     $('#tilda').tilda(function(command, terminal) {
-	//    if (shell_locked == 1) {
-	//	terminal.echo('Shell is now locked.');
-	//	return;
-	  //  }
+	    if (shell_locked == 1) {
+		terminal.echo('Shell is now locked.');
+		return;
+	    }
 
 	    if (command == "help") {
 	    	if (help_used) {
@@ -140,11 +140,24 @@ jQuery(document).ready(function($) {
 				return;
 				break;
 
-			// Code from /proc/patch
-			case "OH15_B00BE5":
+			// Code from /proc/<pid_of_daemon_one>/fd/
+			// Actually this is expected
+			// file descriptor leak
+			case "OH15_A55A55":
 				hide_all_scenes();
 				hints_enabled = 1;
 				actual_scene = "#scene6";
+				actual_hint = 0;
+				hide_all_hints_by_scene_name(actual_scene);
+				$(actual_scene).show();
+				return;
+				break;
+
+			// /proc/<pid_of_daemon_two>/comm
+			case "OH15_150164":
+				hide_all_scenes();
+				hints_enabled = 1;
+				actual_scene = "#scene7";
 				actual_hint = 0;
 				hide_all_hints_by_scene_name(actual_scene);
 				$(actual_scene).show();
@@ -165,7 +178,6 @@ jQuery(document).ready(function($) {
 hide_all_scenes();
 $("#scene1-bg").show();
 $("#scene1").show();
-
 
 function switch_scene(src_scene, dst_scene, delay) {
 	$(src_scene).delay(delay).fadeOut(2000, function() {
